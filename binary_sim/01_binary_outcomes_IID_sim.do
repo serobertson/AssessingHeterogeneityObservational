@@ -638,7 +638,7 @@ local dif_RD_es11 = `dif_S1' - `dif_S0'
 
 /* DR3 */
 
-capture logit Y X1 X2 X3 X4 A inter_A_S S interX1_S [pw = w2]
+capture logit Y X1 X2 X3 X4 X5 X6 X7 X8 A inter_A_S S interX1_S [pw = w2]
 	local error_check1 = _rc
 	
 *check if regression is full rank; avoid errors, e.g., note: A omitted because of collinearity
@@ -649,7 +649,6 @@ if `error_check1' == 0 | full_rank==1 {
  	matrix estimates_DR = e(b)
 
 	
-
 
 	generate g_DR_A1= 		invlogit(estimates_DR[1,1] * X1 ///
 								+ estimates_DR[1,2] * X2 ///
@@ -674,7 +673,7 @@ if `error_check1' == 0 | full_rank==1 {
 								+ estimates_DR[1,8] * X8 ///
 								+ estimates_DR[1,11] * S ///
 								+ estimates_DR[1,12] * interX1_S ///
-								+ estimates_DR[1,13])  
+								+ estimates_DR[1,13]) 
 	qui summ g_DR_A1 if S == 1
 		local mu_S1_A1_es12 = r(mean)
 	qui summ g_DR_A0 if S == 1
