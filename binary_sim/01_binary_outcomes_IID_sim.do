@@ -22,6 +22,8 @@ forvalues scenario  = 1/ 16 {
 
 clear all
 
+set type double
+
 import excel using "marg_cond_binary_rd.xlsx" , clear first
 
 local sub1_p1 = 	`=sub1_p1[`scenario']'
@@ -480,7 +482,7 @@ display `dif_RD_es7'
 *propensity scores without pure outcome predictors (X5-X8) included
 
 drop summand*
-drop g_DR*
+capture drop g_DR*
 
 
 *IPW1, unnormalized
@@ -638,15 +640,16 @@ local dif_RD_es11 = `dif_S1' - `dif_S0'
 
 capture logit Y X1 X2 X3 X4 A inter_A_S S interX1_S [pw = w2]
 	local error_check1 = _rc
-	matrix estimates_M6 = e(b)
 	
 *check if regression is full rank; avoid errors, e.g., note: A omitted because of collinearity
-generate full_rank=1 if e(rank)==9
-replace full_rank=0 if e(rank)!=9
+generate full_rank=1 if e(rank)==13
+replace full_rank=0 if e(rank)!=13
 
 if `error_check1' == 0 | full_rank==1 {
+ 	matrix estimates_DR = e(b)
 
 	
+
 
 	generate g_DR_A1= 		invlogit(estimates_DR[1,1] * X1 ///
 								+ estimates_DR[1,2] * X2 ///
